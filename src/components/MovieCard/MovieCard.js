@@ -1,9 +1,9 @@
 import { MovieContainer, MovieImage } from "./styled"
 
-export default function MovieCard() {
+export default function MovieCard({ poster }) {
     return (
         <MovieContainer>
-            <MovieImage src={"https://http2.mlstatic.com/D_NQ_NP_654490-MLB47711020206_092021-O.jpg"} alt="poster"/>
+            <MovieImage src={poster} alt="poster" />
         </MovieContainer>
     )
 }
