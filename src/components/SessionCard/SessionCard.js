@@ -1,16 +1,19 @@
+import { Link } from "react-router-dom"
 import { SessionContainer, ButtonsContainer } from "./styled"
 
-export default function SessionCard() {
+export default function SessionCard({ session }) {
+    const { id, weekday, date, showtimes } = session
     return (
         <SessionContainer>
-            Terça - 13/12/2022
+            {weekday} - {date}
             <ButtonsContainer>
+                {showtimes.map((show) => (
+                    <Link key={show.id} to={`/assentos/${id}`}>
+                        <button >{show.name}</button>
+                    </Link>
 
-                <button>18:00</button>
-                <button>18:00</button>
-                <button>18:00</button>
-
+                ))}
             </ButtonsContainer>
-        </SessionContainer>
+        </SessionContainer >
     )
 }
