@@ -31,8 +31,8 @@ export const CaptionContainer = styled.div`
     margin: 10px;
 `
 export const CaptionCircle = styled.div`
-    border: 1px solid ${seatColors.available.border};
-    background-color: ${seatColors.available.background};
+    border: 1px solid ${props => seatColors[props.status].border};
+    background-color: ${props => seatColors[props.status].background};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -40,7 +40,7 @@ export const CaptionCircle = styled.div`
     align-items: center;
     justify-content: center;
     margin: 5px 3px;
-    /* cursor: ${props => props.status === "unavailable" ? "none" : "pointer"}; */
+    cursor: ${props => props.status === "unavailable" ? "none" : "pointer"};
 `
 export const CaptionItem = styled.div`
     display: flex;

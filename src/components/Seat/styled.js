@@ -2,8 +2,8 @@ import styled from "styled-components"
 import { seatColors } from "../../constants/colors"
 
 export const SeatItem = styled.div`
-    border: 1px solid ${seatColors.available.border};
-    background-color: ${seatColors.available.background};
+    border: 1px solid ${props => seatColors[props.status].border};
+    background-color: ${props => seatColors[props.status].background};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -14,3 +14,7 @@ export const SeatItem = styled.div`
     justify-content: center;
     margin: 5px 3px;
 `
+
+// Os dois códigos abaixo fazem A MESMA COISA!!
+// seatColors.available.background
+// seatColors["available"].background
