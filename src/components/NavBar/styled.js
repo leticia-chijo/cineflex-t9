@@ -18,3 +18,11 @@ export const NavContainer = styled.div`
         color: ${accentColor};
     }
 `
+
+export const BackArrow = styled.img`
+    height: 40px;
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    cursor: pointer;
+`
