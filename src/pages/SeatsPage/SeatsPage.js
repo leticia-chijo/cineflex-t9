@@ -10,8 +10,7 @@ export default function SeatsPage({ setSuccessInfo }) {
     const { idSessao } = useParams()
     const [session, setSession] = useState(undefined)
     const [selectedSeats, setSelectedSeats] = useState([])
-    const [name, setName] = useState("")
-    const [cpf, setCpf] = useState("")
+    const [form, setForm] = useState({})
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -20,6 +19,11 @@ export default function SeatsPage({ setSuccessInfo }) {
             .catch((err) => console.log(err.response.data))
     }, [])
 
+    function handleForm(e) {
+        const { value, name } = e.target
+        setForm({ ...form, [name]: value })
+    }
+
     function handleSeat(seat) {
         if (!seat.isAvailable) {
             alert("Esse assento não está disponível")
@@ -27,8 +31,18 @@ export default function SeatsPage({ setSuccessInfo }) {
             const isSelected = selectedSeats.some((s) => s.id === seat.id)
 
             if (isSelected) {
-                const newList = selectedSeats.filter((s) => s.id !== seat.id)
-                setSelectedSeats(newList)
+                const unselect = window.confirm("tem certeza que quer retirar esse assento?")
+
+                if (unselect) {
+                    const newList = selectedSeats.filter((s) => s.id !== seat.id)
+                    setSelectedSeats(newList)
+
+                    const newForm = {...form}
+                    delete newForm[`name${seat.name}`]
+                    delete newForm[`cpf${seat.name}`]
+                    setForm(newForm)
+                }
+
             } else {
                 setSelectedSeats([...selectedSeats, seat])
             }
@@ -41,12 +55,15 @@ export default function SeatsPage({ setSuccessInfo }) {
 
         const body = {
             ids: ids,
-            name: name,
-            cpf: cpf
+            compradores: selectedSeats.map((seat) => {
+                return { idAssento: seat.id, nome: form[`name${seat.name}`], cpf: form[`cpf${seat.name}`] }
+            })
         }
+
         if (ids.length === 0) {
             alert("Selecione pelo menos um assento")
         } else {
+            console.log(form)
             axios.post(`${BASE_URL}/seats/book-many`, body)
                 .then(res => {
                     setSuccessInfo({
@@ -54,14 +71,14 @@ export default function SeatsPage({ setSuccessInfo }) {
                         date: session.day.date,
                         movieTitle: session.movie.title,
                         tickets: selectedSeats.map(s => s.name),
-                        name: name,
-                        cpf: cpf
+                        buyers: selectedSeats.map((seat) => {
+                            return { seatName: seat.name, name: form[`name${seat.name}`], cpf: form[`cpf${seat.name}`] }
+                        })
 
                     })
                     navigate("/sucesso")
                 })
                 .catch(err => console.log(err.response.data))
-
         }
     }
 
@@ -100,23 +117,30 @@ export default function SeatsPage({ setSuccessInfo }) {
             </CaptionContainer>
 
             <Form onSubmit={buyTickets}>
-                <label htmlFor="name">Nome do Comprador</label>
-                <input
-                    id="name"
-                    placeholder="Digite seu nome..."
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    required
-                />
 
-                <label htmlFor="cpf">CPF do Comprador</label>
-                <input
-                    id="cpf"
-                    placeholder="Digite seu CPF..."
-                    value={cpf}
-                    onChange={e => setCpf(e.target.value)}
-                    required
-                />
+                {selectedSeats.map((seat) => (
+                    <div key={seat.id}>
+                        <label htmlFor="name">Nome do Comprador {seat.name}</label>
+                        <input
+                            id="name"
+                            placeholder="Digite seu nome..."
+                            name={`name${seat.name}`}
+                            value={form[`name${seat.name}`]}
+                            onChange={handleForm}
+                            required
+                        />
+
+                        <label htmlFor="cpf">CPF do Comprador {seat.name}</label>
+                        <input
+                            id="cpf"
+                            placeholder="Digite seu CPF..."
+                            name={`cpf${seat.name}`}
+                            value={form[`cpf${seat.name}`]}
+                            onChange={handleForm}
+                            required
+                        />
+                    </div>
+                ))}
 
                 <button type="submit">Reservar Assento(s)</button>
             </Form>

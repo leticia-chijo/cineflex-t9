@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { PageContainer, Title, TextContainer } from "./styled"
 
 export default function SuccessPage({ successInfo }) {
-    const { time, date, movieTitle, tickets, name, cpf } = successInfo
+    const { time, date, movieTitle, tickets, buyers } = successInfo
 
     return (
         <PageContainer>
@@ -21,9 +21,15 @@ export default function SuccessPage({ successInfo }) {
             </TextContainer>
 
             <TextContainer>
-                <strong><p>Comprador</p></strong>
-                <p>Nome: {name}</p>
-                <p>CPF: {cpf}</p>
+                {buyers.map((b) => (
+                    <>
+                        <strong><p>Comprador Assento {b.seatName}</p></strong>
+                        <p>Nome: {b.name}</p>
+                        <p>CPF: {b.cpf}</p>
+                        <br />
+                    </>
+                ))}
+
             </TextContainer>
 
             <Link to="/">
