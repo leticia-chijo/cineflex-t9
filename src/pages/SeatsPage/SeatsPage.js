@@ -110,7 +110,12 @@ export default function SeatsPage() {
                 <button type="submit">Reservar Assento(s)</button>
             </Form>
 
-            <Footer />
+            <Footer
+                movieTitle={session.movie.title}
+                poster={session.movie.posterURL}
+                weekday={session.day.weekday}
+                time={session.name}
+            />
         </PageContainer>
     )
 }
