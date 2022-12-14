@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { BASE_URL } from "../../constants/urls"
 import { useNavigate, useParams } from "react-router-dom"
 
-export default function SeatsPage() {
+export default function SeatsPage({ setSuccessInfo }) {
     const { idSessao } = useParams()
     const [session, setSession] = useState(undefined)
     const [selectedSeats, setSelectedSeats] = useState([])
@@ -48,7 +48,18 @@ export default function SeatsPage() {
             alert("Selecione pelo menos um assento")
         } else {
             axios.post(`${BASE_URL}/seats/book-many`, body)
-                .then(res => navigate("/success"))
+                .then(res => {
+                    setSuccessInfo({
+                        time: session.name,
+                        date: session.day.date,
+                        movieTitle: session.movie.title,
+                        tickets: selectedSeats.map(s => s.name),
+                        name: name,
+                        cpf: cpf
+
+                    })
+                    navigate("/sucesso")
+                })
                 .catch(err => console.log(err.response.data))
 
         }
